@@ -25,11 +25,11 @@
 
 ## Swagger:
 
-Available at http://[host]:[port]/ by default
+- Available at http://[host]:[port]/ by default
 
 ### Example for default properties;
 
-http://localhost:9661/
+- http://localhost:9661/
 
 ## Postman
 
