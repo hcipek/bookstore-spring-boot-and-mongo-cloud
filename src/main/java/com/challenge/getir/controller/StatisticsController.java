@@ -1,6 +1,7 @@
 package com.challenge.getir.controller;
 
 import com.challenge.getir.facade.StatisticsFacade;
+import com.challenge.getir.model.ErrorResponse;
 import com.challenge.getir.model.dto.CustomerStatisticsDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -23,7 +24,10 @@ public class StatisticsController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Statistics of Customer by Customer Id",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = CustomerStatisticsDto.class)))
+                            schema = @Schema(implementation = CustomerStatisticsDto.class))),
+            @ApiResponse(responseCode = "200", description = "Customer doesnt have any orders",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class)))
     })
     @GetMapping("/{customer_id}")
     @ResponseStatus(HttpStatus.OK)

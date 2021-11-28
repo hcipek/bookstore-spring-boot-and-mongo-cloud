@@ -19,6 +19,7 @@ public class BookOrderStockFacade {
     private final BookFacade bookFacade;
 
     public OrderDisplayDto heldStocksByOrder (OrderDisplayDto orderDisplayDto) {
+        log.info("Helding stocks operation for order started : {}", orderDisplayDto.toString());
         List<String> bookIds = orderDisplayDto.getOrderDetails().stream()
                 .map(OrderDetailDisplayDto::getBookId)
                 .collect(Collectors.toList());
@@ -34,6 +35,7 @@ public class BookOrderStockFacade {
             throw e;
         }
         bookFacade.releaseStocks(bookIds, orderDisplayDto.getOrderId());
+        log.info("Helding stocks operation for order finished : {}", orderDisplayDto.toString());
         return orderDisplayDto;
     }
 }

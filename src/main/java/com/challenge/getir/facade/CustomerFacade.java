@@ -21,10 +21,12 @@ public class CustomerFacade {
     private final BasicPasswordEncryptor encryptor;
 
     public Page<OrderDisplayDto> getOrdersByCustomerId(String customerId, Integer pageNumber, Integer pageSize) {
+        log.info("Getting orders of customer started with customer : {}", customerId);
         return orderFacade.getOrders(customerId, pageNumber, pageSize);
     }
 
     public CustomerDisplayDto createCustomer(CustomerCreateDto customerCreateDto) {
+        log.info("Creating customer started : {}", customerCreateDto.toString());
         Customer customer = convert(customerCreateDto);
         customer = customerService.save(customer);
         CustomerDisplayDto createdCustomer = convert(customer);

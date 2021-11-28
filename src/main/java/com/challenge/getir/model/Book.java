@@ -2,6 +2,7 @@ package com.challenge.getir.model;
 
 import com.challenge.getir.exception.InsufficentStockException;
 import lombok.Getter;
+import lombok.ToString;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -12,6 +13,7 @@ import java.util.Set;
 
 @Getter
 @Document
+@ToString
 public class Book {
 
     @Id
@@ -34,6 +36,11 @@ public class Book {
 
     public static Book getInstance () {
         return new Book();
+    }
+
+    public Book id (String id) {
+        this.id = id;
+        return this;
     }
 
     public Book bookName (String bookName) {

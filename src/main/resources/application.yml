@@ -1,0 +1,18 @@
+#MongoDB Atlas Connect
+spring:
+  data:
+    mongodb:
+      uri: mongodb+srv://cipek:cipek-test@cluster0.ckkm8.mongodb.net/myFirstDatabase?retryWrites=true&w=majority
+
+#OpenApi - SwaggerUI
+springdoc:
+  swagger-ui:
+    path: /
+
+#Port
+server:
+  port: 9661
+
+logging:
+  level:
+    com.challenge.getir: TRACE

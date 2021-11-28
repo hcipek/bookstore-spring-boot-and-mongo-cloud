@@ -15,6 +15,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/customers")
@@ -30,7 +32,7 @@ public class CustomerController {
     })
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<CustomerDisplayDto> createCustomer (@RequestBody CustomerCreateDto customerCreateDto) {
+    public ResponseEntity<CustomerDisplayDto> createCustomer (@RequestBody @Valid CustomerCreateDto customerCreateDto) {
         CustomerDisplayDto createdCustomer = customerFacade.createCustomer(customerCreateDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdCustomer);
     }

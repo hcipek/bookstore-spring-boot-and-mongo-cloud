@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
-import java.time.LocalDate;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Data
@@ -16,9 +16,11 @@ import java.util.List;
 @Builder
 public class OrderCreateDto {
     @NotBlank
+    @NotNull
     @JsonProperty("customer_id")
     private String customerId;
     @NotBlank
+    @NotNull
     @JsonProperty("order_details")
     private List<OrderDetailCreateDto> orderDetails;
 }

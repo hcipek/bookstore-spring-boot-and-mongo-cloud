@@ -1,5 +1,6 @@
 package com.challenge.getir.facade;
 
+import com.challenge.getir.exception.BadRequestException;
 import com.challenge.getir.exception.InsufficentStockException;
 import com.challenge.getir.model.Order;
 import com.challenge.getir.model.OrderDetail;
@@ -29,12 +30,13 @@ public class OrderFacade {
     private final OrderService orderService;
 
     public Page<OrderDisplayDto> getOrders(String customerId, Integer pageNumber, Integer pageSize) {
+        log.info("Getting orders of Customer : {}, Page Index : {}, Page Size : {}", customerId, pageNumber, pageSize);
         Page<Order> pageResult = orderService.findOrdersByCustomerId(customerId, pageNumber, pageSize);
-        log.info("Page result with total {} pages with total {} orders of customer with id : {}", pageResult.getTotalPages(), pageResult.getTotalElements(), customerId);
         return pageResult.map(order -> convert(order));
     }
 
     public List<OrderDisplayDto> getOrders(String customerId) {
+        log.info("Getting Completed Orders of Customer : {}", customerId);
         List<Order> orders = orderService.findCompletedOrdersByCustomerId(customerId);
         if (CollectionUtils.isEmpty(orders))
             return new ArrayList<>();
@@ -44,8 +46,9 @@ public class OrderFacade {
     }
 
     public OrderDisplayDto createOrder(OrderCreateDto orderCreateDto) {
+        log.info("Creating order started : {}", orderCreateDto.toString());
         Order order = convert(orderCreateDto);
-
+        validateOrder(order);
         order = orderService.save(order);
 
         OrderDisplayDto draftOrder = convert(order);
@@ -55,6 +58,7 @@ public class OrderFacade {
             convert(order, draftOrder);
             order = orderService.completeOrder(order);
         } catch (InsufficentStockException e) {
+            log.error("Stocks were insufficent, check logs for detailed information.");
             order = orderService.cancelOrder(order);
             throw e;
         } finally {
@@ -64,12 +68,15 @@ public class OrderFacade {
     }
 
     public OrderDisplayDto getOrderById(String orderId) {
+        log.info("Get order started with id : {}", orderId);
         Order order = orderService.findOrderById(orderId);
         OrderDisplayDto requestedOrder = convert(order);
+        log.info("Displayed Order is : {}", requestedOrder.toString());
         return requestedOrder;
     }
 
     public Page<OrderDisplayDto> getOrdersByDateInterval(LocalDate startDate, LocalDate endDate) {
+        log.info("Get orders Date Interval started between dates of {} and {}", startDate, endDate);
         Page<Order> pageResult = orderService.findOrdersByDateInterval(startDate, endDate);
         return pageResult.map(order -> convert(order));
     }
@@ -125,5 +132,14 @@ public class OrderFacade {
                 .collect(Collectors.toList());
 
         order.orderDetails(orderDetails);
+    }
+
+    private void validateOrder(Order order) {
+        validateOrderDetails(order.getOrderDetails());
+    }
+
+    private void validateOrderDetails(List<OrderDetail> orderDetails) {
+        if (orderDetails.stream().anyMatch(e -> e.getCount() < 1))
+            throw new BadRequestException("Book counts must be bigger than zero!");
     }
 }

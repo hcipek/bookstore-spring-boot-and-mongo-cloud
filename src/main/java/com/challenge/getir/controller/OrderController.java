@@ -1,6 +1,7 @@
 package com.challenge.getir.controller;
 
 import com.challenge.getir.facade.OrderFacade;
+import com.challenge.getir.model.ErrorResponse;
 import com.challenge.getir.model.dto.OrderCreateDto;
 import com.challenge.getir.model.dto.OrderDisplayDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.time.LocalDate;
 
 @RestController
@@ -30,14 +32,14 @@ public class OrderController {
                             schema = @Schema(implementation = OrderDisplayDto.class))),
             @ApiResponse(responseCode = "200", description = "Book doesnt exists",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = String.class))),
+                            schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "406", description = "Unavailable stocks",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = String.class)))
+                            schema = @Schema(implementation = ErrorResponse.class)))
     })
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<OrderDisplayDto> createOrder (@RequestBody OrderCreateDto orderCreateDto) {
+    public ResponseEntity<OrderDisplayDto> createOrder (@RequestBody @Valid OrderCreateDto orderCreateDto) {
         OrderDisplayDto createdOrder = orderFacade.createOrder(orderCreateDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdOrder);
     }
@@ -49,7 +51,7 @@ public class OrderController {
                             schema = @Schema(implementation = OrderDisplayDto.class))),
             @ApiResponse(responseCode = "200", description = "Order Not Found",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = String.class)))
+                            schema = @Schema(implementation = ErrorResponse.class)))
     })
     @GetMapping("/{order_id}")
     @ResponseStatus(HttpStatus.OK)

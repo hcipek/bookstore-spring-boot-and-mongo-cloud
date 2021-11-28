@@ -17,24 +17,32 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Book save(Book book) {
-        return bookRepository.save(book);
+        log.info("Trying to save book: {}", book.toString());
+        book = bookRepository.save(book);
+        log.info("book saved. {}", book.toString());
+        return book;
     }
 
     @Override
     public Book stockUpdate(BookStockRequestDto bookStockRequestDto) {
         String bookId = bookStockRequestDto.getBookId();
+        log.info("Trying to update stocks of book with id: {}, newStocks : {}", bookId, bookStockRequestDto.getNewStockSize());
 
         Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new EntityNotFoundException("This book does not exists!"));
+        log.info("Book found : {}", book.toString());
         book.stockSize(bookStockRequestDto.getNewStockSize());
 
         book = save(book);
-
+        log.info("Book saved with new stocks : {}", book.toString());
         return book;
     }
 
     @Override
     public Book findById(String bookId) {
-        return bookRepository.findById(bookId).orElseThrow(()->new EntityNotFoundException("Book doesnt exists!"));
+        log.info("Trying to find book with id: {}", bookId);
+        Book book = bookRepository.findById(bookId).orElseThrow(()->new EntityNotFoundException("Book doesnt exists!"));
+        log.info("book found : {}", book.toString());
+        return book;
     }
 }

@@ -16,21 +16,27 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(EntityNotFoundException.class)
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Object> handleEntityNotFoundException(EntityNotFoundException ex, WebRequest request, HttpServletRequest httpRequest) {
-        var errorResponse = new ErrorResponse();
-        errorResponse.setCode(HttpStatus.OK.value());
-        errorResponse.setMessage(ex.getMessage());
-        errorResponse.setUrl(httpRequest.getRequestURI());
-        return ResponseEntity.ok(errorResponse);
+    public ResponseEntity<ErrorResponse> handleEntityNotFoundException(EntityNotFoundException ex, WebRequest request, HttpServletRequest httpRequest) {
+        return getResponse(ex, httpRequest, HttpStatus.OK);
     }
     
     @ExceptionHandler(InsufficentStockException.class)
     @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
     public ResponseEntity<ErrorResponse> handleBookNotFound(InsufficentStockException ex, HttpServletRequest httpRequest) {
+        return getResponse(ex, httpRequest, HttpStatus.NOT_ACCEPTABLE);
+    }
+
+    @ExceptionHandler(BadRequestException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<ErrorResponse> handleBookNotFound(BadRequestException ex, HttpServletRequest httpRequest) {
+        return getResponse(ex, httpRequest, HttpStatus.BAD_REQUEST);
+    }
+
+    private ResponseEntity<ErrorResponse> getResponse(RuntimeException ex, HttpServletRequest req, HttpStatus status) {
         var errorResponse = new ErrorResponse();
-        errorResponse.setCode(HttpStatus.NOT_ACCEPTABLE.value());
+        errorResponse.setCode(status.value());
         errorResponse.setMessage(ex.getMessage());
-        errorResponse.setUrl(httpRequest.getRequestURI());
-        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(errorResponse);
+        errorResponse.setUrl(req.getRequestURI());
+        return ResponseEntity.status(status).body(errorResponse);
     }
 }

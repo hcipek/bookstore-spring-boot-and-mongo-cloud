@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
-import java.time.LocalDate;
+import javax.validation.constraints.NotNull;
 
 @Data
 @NoArgsConstructor
@@ -15,14 +15,18 @@ import java.time.LocalDate;
 @Builder
 public class BookCreateDto {
     @NotBlank
+    @NotNull
     @JsonProperty("book_name")
     private String bookName;
     @NotBlank
+    @NotNull
     @JsonProperty("author_name")
     private String authorName;
     @NotBlank
+    @NotNull
     private Double price;
     @NotBlank
+    @NotNull
     @JsonProperty("stock_size")
     private Integer stockSize;
 }

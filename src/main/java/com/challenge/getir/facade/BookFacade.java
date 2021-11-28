@@ -1,5 +1,6 @@
 package com.challenge.getir.facade;
 
+import com.challenge.getir.exception.BadRequestException;
 import com.challenge.getir.model.Book;
 import com.challenge.getir.model.dto.*;
 import com.challenge.getir.service.book.BookService;
@@ -17,24 +18,30 @@ public class BookFacade {
     private final BookService bookService;
 
     public BookDisplayDto createBook(BookCreateDto bookCreateDto) {
+        log.info("Creating book started : {}", bookCreateDto.toString());
         Book book = convert(bookCreateDto);
+        validateBook(book);
         book = save(book);
         BookDisplayDto createdBook = convert(book);
         return createdBook;
     }
 
     public BookDisplayDto stockUpdate(BookStockRequestDto bookStockRequestDto) {
+        log.info("Updating stocks of a book started wtih book Id : {}, new Stocks : {}", bookStockRequestDto.getBookId(), bookStockRequestDto.getNewStockSize());
+        checkStocks(bookStockRequestDto.getNewStockSize());
         Book book = bookService.stockUpdate(bookStockRequestDto);
         BookDisplayDto updatedBook = convert(book);
         return updatedBook;
     }
 
     public BookDisplayDto getById (String bookId) {
+        log.info("Get book started with id : {}", bookId);
         Book book = findById(bookId);
         return convert(book);
     }
 
     public BookDisplayDto heldStocks (String bookId, String orderId, Integer heldSize) {
+        log.info("Helding stocks of book started with bookId : {}, orderId : {}, heldSize : {}", bookId, orderId, heldSize);
         Book book = findById(bookId);
         book.heldStocks(orderId, heldSize);
         book = save(book);
@@ -46,6 +53,7 @@ public class BookFacade {
     }
 
     public BookDisplayDto releaseStocks (String bookId, String orderId) {
+        log.info("releasing stocks of book : {}, from order : {}", bookId, orderId);
         return refreshHeldStocks(bookId, orderId, false);
     }
 
@@ -54,6 +62,7 @@ public class BookFacade {
     }
 
     public BookDisplayDto returnStocks (String bookId, String orderId) {
+        log.info("return stocks of book : {}, from order : {}", bookId, orderId);
         return refreshHeldStocks(bookId, orderId, true);
     }
 
@@ -89,5 +98,20 @@ public class BookFacade {
                 .authorName(bookCreateDto.getAuthorName())
                 .price(bookCreateDto.getPrice())
                 .stockSize(bookCreateDto.getStockSize());
+    }
+
+    private void validateBook(Book book) {
+        checkStocks(book.getStockSize());
+        checkPrice(book.getPrice());
+    }
+
+    private void checkStocks(Integer stocks) {
+        if (stocks.intValue() < 0)
+            throw new BadRequestException("Stock cannot be less than zero!");
+    }
+
+    private void checkPrice(Double price) {
+        if (price.doubleValue() < Double.valueOf(0).doubleValue())
+            throw new BadRequestException("Price cannot be less than zero!");
     }
 }

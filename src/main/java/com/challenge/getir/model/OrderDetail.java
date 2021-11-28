@@ -1,11 +1,13 @@
 package com.challenge.getir.model;
 
 import lombok.Getter;
+import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 @Getter
+@ToString
 public class OrderDetail {
 
     private String bookId;

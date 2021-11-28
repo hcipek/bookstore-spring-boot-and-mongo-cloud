@@ -2,7 +2,7 @@ package com.challenge.getir.model;
 
 import com.challenge.getir.model.type.OrderStatus;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -13,6 +13,7 @@ import java.util.List;
 
 @Getter
 @Document
+@ToString
 public class Order {
 
     @Id
@@ -34,6 +35,11 @@ public class Order {
 
     public static Order getInstance() {
         return new Order();
+    }
+
+    public Order id(String id) {
+        this.id = id;
+        return this;
     }
 
     public Order customerId(String customerId) {

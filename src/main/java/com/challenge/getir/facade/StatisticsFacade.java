@@ -1,5 +1,6 @@
 package com.challenge.getir.facade;
 
+import com.challenge.getir.exception.EntityNotFoundException;
 import com.challenge.getir.model.dto.CustomerStatisticsDto;
 import com.challenge.getir.model.dto.OrderDisplayDto;
 import com.challenge.getir.model.dto.StatisticDto;
@@ -21,7 +22,11 @@ public class StatisticsFacade {
     private final OrderFacade orderFacade;
 
     public CustomerStatisticsDto getStatisticsByCustomerId(String customerId) {
+        log.info("Getting statistics of Customer started with id : {}", customerId);
         List<OrderDisplayDto> orderDisplayDtos = orderFacade.getOrders(customerId);
+
+        if (orderDisplayDtos.isEmpty())
+            throw new EntityNotFoundException("This customer has not have any completed Orders");
         Map<String, StatisticDto> map = new HashMap<>();
 
         for (OrderDisplayDto orderDisplayDto : orderDisplayDtos) {
@@ -38,6 +43,7 @@ public class StatisticsFacade {
             map.put(month, statisticDto);
         }
 
+        log.info("Getting statistics of Customer finished");
         return CustomerStatisticsDto.builder()
                 .statistics(map.values())
                 .build();
