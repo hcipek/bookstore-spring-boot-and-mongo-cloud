@@ -30,3 +30,7 @@ Available at http://[host]:[port]/ by default
 ### Example for default properties;
 
 http://localhost:9661/
+
+## Postman
+
+- https://www.getpostman.com/collections/edd1e977eb36f9ea6cfb
