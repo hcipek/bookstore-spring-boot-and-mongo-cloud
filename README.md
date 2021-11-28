@@ -80,7 +80,7 @@ Docker image can be pulled from terminal with this command
 
 - Logging
 - Open API Specification (Swagger sounds nice) (authentication not needed)
-> When Run the App, check http://localhost:9661/
+> After Run the App, check http://localhost:9661/
 
 
 ## How to Run Application
