@@ -1,13 +1,10 @@
 package com.challenge.getir.model;
 
-import lombok.Data;
 import lombok.Getter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
 
 @Document
 @Getter
@@ -20,6 +17,10 @@ public class Customer {
 
     private String customerName;
 
+    private String email;
+
+    private String password;
+
     private Customer() {
 
     }
@@ -30,6 +31,16 @@ public class Customer {
 
     public Customer customerName(String customerName) {
         this.customerName = customerName;
+        return this;
+    }
+
+    public Customer email(String email) {
+        this.email = email;
+        return this;
+    }
+
+    public Customer password(String password) {
+        this.password = password;
         return this;
     }
 }

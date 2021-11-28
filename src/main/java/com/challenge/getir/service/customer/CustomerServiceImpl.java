@@ -1,13 +1,11 @@
 package com.challenge.getir.service.customer;
 
-import com.challenge.getir.exception.EntityNotFoundException;
 import com.challenge.getir.model.Customer;
 import com.challenge.getir.repository.CustomerRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.jasypt.util.password.BasicPasswordEncryptor;
 import org.springframework.stereotype.Service;
-
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -15,9 +13,14 @@ import java.util.Set;
 public class CustomerServiceImpl implements CustomerService {
 
     private final CustomerRepository customerRepository;
+    private final BasicPasswordEncryptor encryptor;
 
     @Override
     public Customer save(Customer customer) {
         return customerRepository.save(customer);
+    }
+
+    private boolean checkPassword (String plain, String encrypted) {
+        return encryptor.checkPassword(plain, encrypted);
     }
 }

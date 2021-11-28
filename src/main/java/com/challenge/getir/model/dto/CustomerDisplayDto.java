@@ -6,9 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
-import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -21,5 +19,6 @@ public class CustomerDisplayDto {
     private LocalDate creationDate;
     @JsonProperty("customer_name")
     private String customerName;
+    private String email;
 
 }

@@ -7,11 +7,9 @@ import com.challenge.getir.model.dto.OrderDisplayDto;
 import com.challenge.getir.service.customer.CustomerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.jasypt.util.password.BasicPasswordEncryptor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
-import java.util.Set;
 
 @Component
 @RequiredArgsConstructor
@@ -20,6 +18,7 @@ public class CustomerFacade {
 
     private final OrderFacade orderFacade;
     private final CustomerService customerService;
+    private final BasicPasswordEncryptor encryptor;
 
     public Page<OrderDisplayDto> getOrdersByCustomerId(String customerId, Integer pageNumber, Integer pageSize) {
         return orderFacade.getOrders(customerId, pageNumber, pageSize);
@@ -37,11 +36,15 @@ public class CustomerFacade {
                 .customerId(customer.getId())
                 .creationDate(customer.getCreationDate())
                 .customerName(customer.getCustomerName())
+                .email(customer.getEmail())
                 .build();
     }
 
     private Customer convert(CustomerCreateDto customerCreateDto) {
         return Customer.getInstance()
-                .customerName(customerCreateDto.getCustomerName());
+                .customerName(customerCreateDto.getCustomerName())
+                .password(encryptor.encryptPassword(customerCreateDto.getPassword()))
+                .email(customerCreateDto.getEmail());
     }
+
 }
