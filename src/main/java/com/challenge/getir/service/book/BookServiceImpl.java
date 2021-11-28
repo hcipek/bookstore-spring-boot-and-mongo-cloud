@@ -8,8 +8,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 @Log4j2
@@ -24,14 +22,19 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Book stockUpdate(BookStockRequestDto bookStockRequestDto) {
-        String bookId = bookStockRequestDto.getBookId().toString();
+        String bookId = bookStockRequestDto.getBookId();
 
         Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new EntityNotFoundException("This book does not exists!"));
-        book.setStockSize(bookStockRequestDto.getNewStockSize());
+        book.stockSize(bookStockRequestDto.getNewStockSize());
 
         book = save(book);
 
         return book;
+    }
+
+    @Override
+    public Book findById(String bookId) {
+        return bookRepository.findById(bookId).orElseThrow(()->new EntityNotFoundException("Book doesnt exists!"));
     }
 }

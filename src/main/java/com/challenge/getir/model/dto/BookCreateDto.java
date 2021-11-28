@@ -7,16 +7,22 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
+import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class BookStockRequestDto {
+public class BookCreateDto {
     @NotBlank
-    @JsonProperty("book_id")
-    private String bookId;
+    @JsonProperty("book_name")
+    private String bookName;
     @NotBlank
-    @JsonProperty("new_stock_size")
-    private Integer newStockSize;
+    @JsonProperty("author_name")
+    private String authorName;
+    @NotBlank
+    private Double price;
+    @NotBlank
+    @JsonProperty("stock_size")
+    private Integer stockSize;
 }

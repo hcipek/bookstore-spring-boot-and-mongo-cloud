@@ -8,4 +8,6 @@ public interface BookService {
     Book save(Book book);
 
     Book stockUpdate(BookStockRequestDto bookStockRequestDto);
+
+    Book findById(String bookId);
 }

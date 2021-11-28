@@ -6,17 +6,16 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotBlank;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class BookStockRequestDto {
-    @NotBlank
+public class OrderDetailDisplayDto {
     @JsonProperty("book_id")
     private String bookId;
-    @NotBlank
-    @JsonProperty("new_stock_size")
-    private Integer newStockSize;
+    private Integer count;
+    @JsonProperty("price_per_unit")
+    private Double pricePerUnit;
+    @JsonProperty("detail_total_price")
+    private Double detailTotalPrice;
 }
